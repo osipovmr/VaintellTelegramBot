@@ -4,8 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import vaintell.TelegramBot.config.BotConfig;
+import vaintell.TelegramBot.config.Constants;
 
 @Component
 public class TelegramBot extends TelegramLongPollingBot {
@@ -19,37 +22,50 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return botConfig.getBotName();
+        return Constants.BOT_USERNAME;
     }
 
     @Override
     public String getBotToken() {
-        return botConfig.getToken();
+        return Constants.BOT_TOKEN;
     }
 
     @Override
     public void onUpdateReceived(Update update) {
+        Message inMess = update.getMessage();
+        System.out.println(inMess);
+        String chatId = inMess.getChatId().toString();
+        System.out.println(chatId);
+        //SendMessage outMess = new SendMessage();
         if (update.hasMessage() && update.getMessage().hasText()) {
             String messageText = update.getMessage().getText();
-            long chatId = update.getMessage().getChatId();
             switch (messageText) {
                 case "/start":
-                    startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
+                    try {
+                        startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
+                    } catch (TelegramApiException e) {
+                        throw new RuntimeException(e);
+                    }
                     break;
                 default:
-                    sendTextMessage(chatId, "Sorry, command was not recognized.");
+                    try {
+                        sendTextMessage(chatId, "Sorry, command was not recognized.");
+                    } catch (TelegramApiException e) {
+                        throw new RuntimeException(e);
+                    }
             }
         }
     }
 
-    private void startCommandReceived(long chatId, String name) {
+    private void startCommandReceived(String chatId, String name) throws TelegramApiException {
         String answer = "Hello, " + name + "! Nice to meet you!";
         sendTextMessage(chatId, answer);
     }
 
-    private void sendTextMessage(long chatId, String textToSend) {
+    private void sendTextMessage(String chatId, String textToSend) throws TelegramApiException {
         SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(String.valueOf(chatId));
+        sendMessage.setChatId(chatId);
         sendMessage.setText(textToSend);
+        execute(sendMessage);
     }
 }
