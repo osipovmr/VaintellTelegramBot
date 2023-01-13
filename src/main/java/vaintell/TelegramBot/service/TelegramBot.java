@@ -1,7 +1,8 @@
 package vaintell.TelegramBot.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -9,16 +10,15 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import vaintell.TelegramBot.config.BotConfig;
 import vaintell.TelegramBot.config.Constants;
+import vaintell.TelegramBot.service.personService.PersonService;
 
-@Component
+@Service
+@RequiredArgsConstructor
 public class TelegramBot extends TelegramLongPollingBot {
 
-    @Autowired
-    final BotConfig botConfig;
+    //private final BotConfig botConfig;
+    private final PersonService personService;
 
-    public TelegramBot(BotConfig botConfig) {
-        this.botConfig = botConfig;
-    }
 
     @Override
     public String getBotUsername() {
@@ -41,6 +41,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             String messageText = update.getMessage().getText();
             switch (messageText) {
                 case "/start":
+                    personService.registerPerson(chatId, inMess.getChat().getFirstName(), inMess.getChat().getLastName());
                     startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
                     break;
                 default:
