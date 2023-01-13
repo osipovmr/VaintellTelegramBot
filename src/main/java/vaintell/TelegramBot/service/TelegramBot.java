@@ -41,31 +41,27 @@ public class TelegramBot extends TelegramLongPollingBot {
             String messageText = update.getMessage().getText();
             switch (messageText) {
                 case "/start":
-                    try {
-                        startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
-                    } catch (TelegramApiException e) {
-                        throw new RuntimeException(e);
-                    }
+                    startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
                     break;
                 default:
-                    try {
-                        sendTextMessage(chatId, "Sorry, command was not recognized.");
-                    } catch (TelegramApiException e) {
-                        throw new RuntimeException(e);
-                    }
+                    sendTextMessage(chatId, "Sorry, command was not recognized.");
             }
         }
     }
 
-    private void startCommandReceived(String chatId, String name) throws TelegramApiException {
+    private void startCommandReceived(String chatId, String name) {
         String answer = "Hello, " + name + "! Nice to meet you!";
         sendTextMessage(chatId, answer);
     }
 
-    private void sendTextMessage(String chatId, String textToSend) throws TelegramApiException {
+    private void sendTextMessage(String chatId, String textToSend) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
         sendMessage.setText(textToSend);
-        execute(sendMessage);
+        try {
+            execute(sendMessage);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
