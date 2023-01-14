@@ -7,4 +7,6 @@ public interface DelayService {
     int getDelay();
 
     void setDelay(int delay);
+
+    String getWelcomeMsg();
 }

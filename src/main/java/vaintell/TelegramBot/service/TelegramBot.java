@@ -1,13 +1,14 @@
 package vaintell.TelegramBot.service;
 
 import lombok.RequiredArgsConstructor;
+import net.minidev.json.JSONUtil;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import vaintell.TelegramBot.config.Constants;
+import vaintell.TelegramBot.config.BotConfig;
 import vaintell.TelegramBot.service.cashService.CashService;
 import vaintell.TelegramBot.service.delayService.DelayService;
 import vaintell.TelegramBot.service.personService.PersonService;
@@ -18,24 +19,30 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class TelegramBot extends TelegramLongPollingBot {
 
-    //private final BotConfig botConfig;
+    private final BotConfig botConfig;
     private final PersonService personService;
     private final CashService cashService;
     private final DelayService delayService;
 
-
     @Override
     public String getBotUsername() {
-        return Constants.BOT_USERNAME;
+        return botConfig.getBotName();
     }
+
+    /*@Override
+    public String getBotToken() {
+        return botConfig.getToken();
+    }*/
 
     @Override
     public String getBotToken() {
-        return Constants.BOT_TOKEN;
+        return makeToken(botConfig.getBotOne(), botConfig.getBotTwo());
     }
+
 
     @Override
     public void onUpdateReceived(Update update) {
+
         Message inMess = update.getMessage();
         String chatId = inMess.getChatId().toString();
         if (update.hasMessage() && update.getMessage().hasText()) {
@@ -53,7 +60,8 @@ public class TelegramBot extends TelegramLongPollingBot {
                  */
                 default:
                     try {
-                        TimeUnit.MILLISECONDS.sleep(delayService.getDelay());
+                        //TimeUnit.MILLISECONDS.sleep(delayService.getDelay());
+                        TimeUnit.MILLISECONDS.sleep(botConfig.getDelay());
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
@@ -78,7 +86,8 @@ public class TelegramBot extends TelegramLongPollingBot {
         sendMessage.setChatId(chatId);
         sendMessage.setText(textToSend + " " + cashService.getMessageNumber(chatId));
         try {
-            TimeUnit.MILLISECONDS.sleep(delayService.getDelay());
+            //TimeUnit.MILLISECONDS.sleep(delayService.getDelay());
+            TimeUnit.MILLISECONDS.sleep(botConfig.getDelay());
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -87,5 +96,10 @@ public class TelegramBot extends TelegramLongPollingBot {
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private String makeToken(String partOne, String partTwo) {
+        StringBuilder stringBuilder = new StringBuilder();
+        return stringBuilder.append(partOne).append(partTwo).toString();
     }
 }

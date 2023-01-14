@@ -13,4 +13,15 @@ public class BotConfig {
     String botName;
     @Value("${bot.token}")
     String token;
+    @Value("${bot.delay}")
+    Integer delay;
+    @Value("${bot.message}")
+    private String welcomeMsg;
+
+    @Value("${bot.tokenOne}")
+    String botOne;
+    @Value("${bot.tokenTwo}")
+    String botTwo;
+
+
 }
