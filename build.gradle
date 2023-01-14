@@ -20,6 +20,9 @@ bootRun {
 	}
 }
 
+tasks.named("bootRun") {
+	mainClass = 'vaintell.TelegramBot.TelegramBotApplication'
+}
 
 group = 'vaintell'
 version = '0.0.1-SNAPSHOT'

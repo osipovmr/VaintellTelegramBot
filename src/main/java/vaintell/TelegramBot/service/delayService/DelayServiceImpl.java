@@ -13,18 +13,14 @@ public class DelayServiceImpl implements DelayService {
     private final BotConfig botConfig;
 
     @Override
-    public int getDelay() {
+    public String getDelay() {
         return botConfig.getDelay();
     }
 
     @Override
     public void setDelay(int delay) {
         if (delay < 0 ) throw new BadRequestException("Wrong delay!");
-        botConfig.setDelay(delay);
-    }
-
-    @Override
-    public String getWelcomeMsg(){
-        return botConfig.getWelcomeMsg();
+        String delayStr = String.valueOf(delay);
+        botConfig.setDelay(delayStr);
     }
 }

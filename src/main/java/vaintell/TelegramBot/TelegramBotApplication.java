@@ -3,15 +3,15 @@ package vaintell.TelegramBot;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+
 @SpringBootApplication
 public class TelegramBotApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(TelegramBotApplication.class, args);
-		System.out.println("Gradle command line arguments example");
-		for (String arg : args) {
-			System.out.println("Got argument [" + arg + "]");
-		}
+		SpringApplication.run(TelegramBotApplication.class,args);
 	}
-
 }

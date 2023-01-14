@@ -4,9 +4,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface DelayService {
-    int getDelay();
-
+    String getDelay();
     void setDelay(int delay);
-
-    String getWelcomeMsg();
 }

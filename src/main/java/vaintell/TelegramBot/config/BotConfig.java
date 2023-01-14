@@ -10,18 +10,9 @@ import org.springframework.context.annotation.PropertySource;
 @Data
 public class BotConfig {
     @Value("${bot.name}")
-    String botName;
+    String name;
     @Value("${bot.token}")
     String token;
     @Value("${bot.delay}")
-    Integer delay;
-    @Value("${bot.message}")
-    private String welcomeMsg;
-
-    @Value("${bot.tokenOne}")
-    String botOne;
-    @Value("${bot.tokenTwo}")
-    String botTwo;
-
-
+    String delay;
 }

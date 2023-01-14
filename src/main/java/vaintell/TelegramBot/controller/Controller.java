@@ -18,11 +18,11 @@ public class Controller {
 
     @GetMapping("/helloWorld")
     public ResponseEntity<String> checkTest(){
-        return ResponseEntity.ok(delayService.getWelcomeMsg());
+        return ResponseEntity.ok("Hello, world!");
     }
 
     @GetMapping("/getDelay")
-    public ResponseEntity<Integer> getDelay(){
+    public ResponseEntity<String> getDelay(){
         return ResponseEntity.ok(delayService.getDelay());
     }
 

@@ -1,0 +1,1 @@
+./gradlew bootRun --args="--bot.token=5777064796:AAHwRDsxtAvF2BI93VrCJ7m97znFHW3We6U --bot.delay=1234"
