@@ -23,13 +23,11 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        System.out.println(botConfig.getName());
         return botConfig.getName();
     }
 
     @Override
     public String getBotToken() {
-        System.out.println(botConfig.getToken());
         return botConfig.getToken();
     }
 
@@ -47,7 +45,15 @@ public class TelegramBot extends TelegramLongPollingBot {
                  */
                 case "/start":
                     personService.registerPerson(chatId, inMess.getChat().getFirstName(), inMess.getChat().getLastName());
-                    startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
+                    SendMessage sendMessage = new SendMessage();
+                    sendMessage.setChatId(chatId);
+                    String answer = "Hello, " + inMess.getChat().getFirstName() + "! Nice to meet you!";
+                    sendMessage.setText(answer);
+                    try {
+                        execute(sendMessage);
+                    } catch (TelegramApiException e) {
+                        throw new RuntimeException(e);
+                    }
                     break;
                 /**
                  * 2) Весь дальнейший ввод информации, после начала использования бота и сохранения пользователя, считается как echo message.
@@ -61,11 +67,6 @@ public class TelegramBot extends TelegramLongPollingBot {
                     sendTextMessage(chatId, inMess.getText());
             }
         }
-    }
-
-    private void startCommandReceived(String chatId, String name) {
-        String answer = "Hello, " + name + "! Nice to meet you!";
-        sendTextMessage(chatId, answer);
     }
 
     /**
